@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Book a Detail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #15171c;
+    --panel: #1d2026;
+    --panel-2: #262a32;
+    --line: #33373f;
+    --text: #f2f1ec;
+    --muted: #9298a1;
+    --accent: #e8b23d;
+    --accent-dim: #7a5f27;
+    --danger: #d9694f;
+  }
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: radial-gradient(1200px 600px at 80% -10%, #1f232b 0%, var(--bg) 60%);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display:flex;
+    flex-direction:column;
+  }
+  header{
+    padding: 28px 24px 8px;
+    max-width: 640px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .eyebrow{
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+  }
+  h1{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 34px;
+    line-height: 1.15;
+    margin: 0 0 8px;
+    max-width: 14ch;
+  }
+  .sub{
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.5;
+    max-width: 42ch;
+    margin: 0 0 20px;
+  }
+  main{
+    flex:1;
+    padding: 8px 24px 60px;
+    max-width: 640px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  form{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  label{ font-size: 13px; color: var(--muted); font-weight: 500; }
+  input, select, textarea{
+    background: var(--panel-2);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 12px 13px;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    outline: none;
+    transition: border-color .15s ease;
+  }
+  input:focus, select:focus, textarea:focus{
+    border-color: var(--accent);
+  }
+  textarea{ resize: vertical; min-height: 70px; }
+  .row2{ display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 480px){ .row2{ grid-template-columns: 1fr; } }
+  .services{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+    gap: 10px;
+  }
+  .service-opt{
+    border: 1px solid var(--line);
+    background: var(--panel-2);
+    border-radius: 10px;
+    padding: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    position: relative;
+  }
+  .service-opt input{ position:absolute; opacity:0; }
+  .service-opt .name{ font-weight: 600; display:block; }
+  .service-opt .price{ color: var(--muted); font-size: 13px; }
+  .service-opt.selected{
+    border-color: var(--accent);
+    background: #2c2410;
+  }
+  button[type=submit]{
+    margin-top: 6px;
+    background: var(--accent);
+    color: #1a1500;
+    border: none;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+    cursor: pointer;
+    transition: filter .15s ease;
+  }
+  button[type=submit]:hover{ filter: brightness(1.08); }
+  button[type=submit]:disabled{ opacity: .5; cursor: not-allowed; }
+
+  #result{
+    display:none;
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+  }
+  .confirm-card{
+    background: var(--panel);
+    border: 1px solid var(--accent);
+    border-radius: 14px;
+    padding: 28px 24px;
+    text-align: left;
+  }
+  .confirm-card h2{
+    font-family: 'Space Grotesk', sans-serif;
+    margin: 0 0 8px;
+    color: var(--accent);
+    font-size: 22px;
+  }
+  .confirm-card p{ color: var(--muted); margin: 0 0 4px; line-height: 1.5; }
+  .err{ color: var(--danger); font-size: 14px; margin-top: -6px; }
+  footer{
+    text-align:center;
+    color: var(--muted);
+    font-size: 12px;
+    padding-bottom: 24px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Mobile Detailing</div>
+  <h1>Book your car's next detail</h1>
+  <p class="sub">Pick a service and a time that works for you. You'll get a confirmation right away — no calls, no waiting.</p>
+</header>
+
+<main>
+  <form id="bookingForm">
+    <div class="field">
+      <label for="name">Your name</label>
+      <input type="text" id="name" required placeholder="Full name" />
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label for="phone">Phone number</label>
+        <input type="tel" id="phone" required placeholder="03xx-xxxxxxx" />
+      </div>
+      <div class="field">
+        <label for="carModel">Car make & model</label>
+        <input type="text" id="carModel" required placeholder="e.g. Honda Civic 2020" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Choose a service</label>
+      <div class="services" id="serviceOptions">
+        <label class="service-opt">
+          <input type="radio" name="service" value="Basic Wash - $25" />
+          <span class="name">Basic Wash</span>
+          <span class="price">$25</span>
+        </label>
+        <label class="service-opt">
+          <input type="radio" name="service" value="Interior Deep Clean - $60" />
+          <span class="name">Interior Deep Clean</span>
+          <span class="price">$60</span>
+        </label>
+        <label class="service-opt">
+          <input type="radio" name="service" value="Full Detail - $90" />
+          <span class="name">Full Detail</span>
+          <span class="price">$90</span>
+        </label>
+        <label class="service-opt">
+          <input type="radio" name="service" value="Ceramic Coating - $180" />
+          <span class="name">Ceramic Coating</span>
+          <span class="price">$180</span>
+        </label>
+      </div>
+      <div class="err" id="serviceErr" style="display:none;">Please choose a service.</div>
+    </div>
+
+    <div class="row2">
+      <div class="field">
+        <label for="date">Preferred date</label>
+        <input type="date" id="date" required />
+      </div>
+      <div class="field">
+        <label for="time">Preferred time</label>
+        <input type="time" id="time" required />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="address">Where should we come?</label>
+      <input type="text" id="address" required placeholder="Address or area" />
+    </div>
+
+    <div class="field">
+      <label for="notes">Anything else we should know? (optional)</label>
+      <textarea id="notes" placeholder="Gate code, parking, specific concerns..."></textarea>
+    </div>
+
+    <button type="submit" id="submitBtn">Confirm booking</button>
+  </form>
+</main>
+
+<div id="result">
+  <div class="confirm-card">
+    <h2 id="confirmTitle">Booking received</h2>
+    <p id="confirmBody"></p>
+  </div>
+</div>
+
+<footer>Powered by your own booking system — no fees per booking.</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  document.querySelectorAll('.service-opt').forEach(opt => {
+    opt.addEventListener('click', () => {
+      document.querySelectorAll('.service-opt').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      opt.querySelector('input').checked = true;
+    });
+  });
+
+  const form = document.getElementById('bookingForm');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const service = form.querySelector('input[name=service]:checked');
+    const serviceErr = document.getElementById('serviceErr');
+    if(!service){
+      serviceErr.style.display = 'block';
+      return;
+    }
+    serviceErr.style.display = 'none';
+
+    const booking = {
+      name: document.getElementById('name').value.trim(),
+      phone: document.getElementById('phone').value.trim(),
+      car_model: document.getElementById('carModel').value.trim(),
+      service: service.value,
+      preferred_date: document.getElementById('date').value,
+      preferred_time: document.getElementById('time').value,
+      address: document.getElementById('address').value.trim(),
+      notes: document.getElementById('notes').value.trim(),
+      status: 'pending',
+      created_at: new Date().toISOString()
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+
+    const { error } = await supabaseClient.from('bookings').insert([booking]);
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Confirm booking';
+
+    const resultBox = document.getElementById('result');
+    const title = document.getElementById('confirmTitle');
+    const body = document.getElementById('confirmBody');
+
+    if(error){
+      title.textContent = 'Something went wrong';
+      title.style.color = 'var(--danger)';
+      body.textContent = 'Please try again in a moment, or contact us directly. (' + error.message + ')';
+    } else {
+      title.textContent = 'Booking received';
+      title.style.color = 'var(--accent)';
+      body.innerHTML = `Thanks, ${booking.name}. We've noted your <strong>${booking.service.split(' - ')[0]}</strong> for ${booking.preferred_date} at ${booking.preferred_time}. We'll confirm shortly by phone.`;
+      form.reset();
+      document.querySelectorAll('.service-opt').forEach(o => o.classList.remove('selected'));
+    }
+
+    resultBox.style.display = 'block';
+    resultBox.scrollIntoView({ behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>
